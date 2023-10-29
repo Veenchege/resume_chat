@@ -1,3 +1,14 @@
+from langchain.document_loaders import PyPDFDirectoryLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import Pinecone
+import pinecone
+from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import pipeline
+import os
+import sys
+
+
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationChain
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
@@ -19,7 +30,7 @@ if 'responses' not in st.session_state:
 if 'requests' not in st.session_state:
     st.session_state['requests'] = []
 
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=st.secrets["openai_api_key"])
+llm = HuggingFacePipeline(pipeline=pipe, model_kwargs={'temperature':0.1})
 
 if 'buffer_memory' not in st.session_state:
             st.session_state.buffer_memory=ConversationBufferWindowMemory(k=3,return_messages=True)
